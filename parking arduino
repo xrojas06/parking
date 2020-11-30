@@ -1,0 +1,72 @@
+bool sensor_entrada  = LOW;
+bool estado_anterior = HIGH;
+bool sensor_salida = LOW;
+bool estado_anterior2 = HIGH;
+bool sensor_espacio1 = HIGH;
+bool sensor_espacio2 = HIGH;
+bool sensor_espacio3 = HIGH;
+int salida = 0;
+int entrada = 0;
+int count = 3;
+unsigned long tiempo1 = 0;
+void setup() {
+  // put your setup code here, to run once:
+  Serial.begin(9600);
+  pinMode(13,OUTPUT);
+  pinMode(12,OUTPUT);
+  pinMode(11,OUTPUT);
+  pinMode(10,OUTPUT);
+  pinMode(7,INPUT);
+  pinMode(6,INPUT);
+  pinMode(5,INPUT);
+  pinMode(3,INPUT);
+  pinMode(4,INPUT);
+}
+
+void loop() {
+  // put your main code here, to run repeatedly:
+  sensor_entrada = digitalRead(3);
+  sensor_salida = digitalRead(4);
+  sensor_espacio1 = digitalRead(7);
+  sensor_espacio2 = digitalRead(6);
+  sensor_espacio3 = digitalRead(5);
+  if (sensor_entrada == HIGH && estado_anterior == LOW){
+    count--;
+     entrada = 1 - entrada;
+     delay(200);
+  }estado_anterior = sensor_entrada;
+  if (sensor_salida == HIGH && estado_anterior2 == LOW){
+    count++;
+    salida = 1-salida;
+    delay(150);
+   }estado_anterior2 = sensor_salida;
+  Serial.print("Espacios libres: ");
+  Serial.println(count);
+  delay(500);
+  if (entrada == 1 || salida == 1){
+    if (count<=0){
+    digitalWrite(13,HIGH);
+  }else{
+    digitalWrite(13,LOW);
+    }
+  }else{
+    digitalWrite(13,LOW);
+   }
+  if (sensor_espacio1 == LOW){
+    digitalWrite(12,HIGH);
+    tiempo1 = millis();
+    Serial.println(tiempo1-1000);
+  }else{
+    digitalWrite(12,LOW);
+    }
+  if (sensor_espacio2 == LOW){
+    digitalWrite(11,HIGH);
+  }else{
+    digitalWrite(11,LOW);
+    }
+     if (sensor_espacio3 == LOW){
+    digitalWrite(10,HIGH);
+  }else{
+    digitalWrite(10,LOW);
+    }
+}
